@@ -25,7 +25,7 @@ def task_list(request):
 def task_edit(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == 'POST':
-        form = TaskForm(request.POST, instance=task)
+        form = TaskForm(request.POST, instance=task, editing=True)
         if form.is_valid():
             form.save()
             return redirect('task_list')
