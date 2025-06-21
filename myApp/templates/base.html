@@ -8,6 +8,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Base{% endblock %}</title>
 </head>
+<script>
+    // Wait until the page is fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        // Find all message boxes
+        const messages = document.querySelectorAll('[data-dismissible-message]');
+        messages.forEach(msg => {
+            setTimeout(() => {
+                msg.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
+                setTimeout(() => msg.remove(), 1000); // wait for fade-out animation
+            }, 5000); // wait 5 seconds before starting fade
+        });
+    });
+</script>
 <body class="flex flex-col min-h-screen bg-black text-gray-300 relative overflow-x-hidden">
     <!-- Background(Base.html) -->
     <div class="absolute inset-0 w-full h-full bg-gradient-to-b from-gray-900 to-black opacity-90 z-[-1]"></div>
@@ -30,6 +43,24 @@
         {% block content %}
 
         {% endblock %}
+
+        {% if messages %}
+        <div class="mb-6 space-y-2">
+            {% for message in messages %}
+            <div data-dismissible-message
+                class="px-4 py-3 rounded text-white
+                {% if message.tags == 'success' %}bg-green-600
+                {% elif message.tags == 'error' %}bg-red-600
+                {% elif message.tags == 'warning' %}bg-yellow-400 text-black
+                {% else %}bg-gray-700
+                {% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
     </main>
 
     <!-- Main Footer-->

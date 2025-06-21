@@ -103,7 +103,9 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/tasks/'  
-
+#auto logout
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

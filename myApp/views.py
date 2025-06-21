@@ -4,15 +4,18 @@
 #  Processes data (e.g. fetches tasks from the database)
 #  Returns a response, usually by rendering an HTML template
 
+from .models import Task
+from .forms import TaskForm
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from .models import Task
-from .forms import TaskForm
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 
 class homeView(View):
     def get(self, request): # 'request' is an instance of HttpRequest class, it represents everything the brower sent to the server
@@ -41,6 +44,7 @@ def task_edit(request, task_id):
         form = TaskForm(request.POST, instance=task, editing=True)
         if form.is_valid():
             form.save()
+            messages.success(request, "Task updated!")
             return redirect('task_list')
     else:
         form = TaskForm(instance=task)
@@ -54,6 +58,7 @@ def task_create(request):
             task = form.save(commit=False)
             task.user = request.user  # link task to logged-in user
             task.save()
+            messages.success(request, "Yay! you added a new task.")
             return redirect('task_list')
     else:
         form = TaskForm()
