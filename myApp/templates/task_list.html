@@ -1,18 +1,21 @@
 {% extends 'base.html' %}
-{% block title%}Tasks{% endblock %}
+{% block title %}Tasks{% endblock %}
 {% block content %}
-<h1 class = "text-bold text-xl text-white mb-6">Your Tasks</h1>
+<h1 class="text-white text-xl mb-6">Oh, {{ user.username }} tasks are on 🔥 ;)</h1>
+
+<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
 
 <div class="mb-4">
-    <a href="{% url 'task_create' %}" class="bg-purple-500 border-purple-800 border hover:bg-transparent border-purple text-white px-4 py-2 ">
+    <a href="{% url 'task_create' %}" class="bg-purple-500 border-purple-800 border hover:bg-transparent border-purple text-white px-4 py-2">
         ➕ New Task
     </a>
 </div>
+<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
 
 <div class="overflow-x-auto">
     <table class="table-auto w-full text-white border border-gray-700">
         <thead>
-            <tr class="bg-b-transparent text-left border-b-1 border-l border-r border-t">
+            <tr class="bg-b-transparent text-left border">
                 <th class="p-2 border">Task Name</th>
                 <th class="p-2 border">Description</th>
                 <th class="p-2 border">Due Date</th>
@@ -35,7 +38,7 @@
                         🟢 Low
                     {% endif %}
                 </td>
-                <td class="p-2">
+                <td class="p-2 status-cell" data-task-id="{{ task.id }}">
                     {% if task.completed %}
                         🟢
                     {% else %}
@@ -54,10 +57,31 @@
 
 <script>
     document.querySelectorAll('.task-row').forEach(row => {
-        row.addEventListener('click', () => {
-            window.location = row.getAttribute('data-href');
+        row.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('status-cell')) {
+                window.location = row.getAttribute('data-href');
+            }
+        });
+    });
+
+    document.querySelectorAll('.status-cell').forEach(cell => {
+        cell.addEventListener('click', (e) => {
+            e.stopPropagation();  
+            const taskId = cell.dataset.taskId;
+
+            fetch(`/tasks/${taskId}/statusUpdate`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.getElementById('csrf-token').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                cell.textContent = data.completed ? '🟢' : '🔴';
+            });
         });
     });
 </script>
+
 
 {% endblock %}

@@ -9,12 +9,12 @@ from .forms import TaskForm, NewSignupForm
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.http import HttpResponse
+from django.views.decorators.http import require_POST
+from django.http import HttpResponse, JsonResponse
 
 from django.contrib.auth import login 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
 
 class homeView(View):
     def get(self, request): # 'request' is an instance of HttpRequest class, it represents everything the brower sent to the server
@@ -55,10 +55,18 @@ def task_create(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            task.user = request.user  # link task to logged-in user
+            task.user = request.user  
             task.save()
             messages.success(request, "Yay! you added a new task.")
             return redirect('task_list')
     else:
         form = TaskForm()
     return render(request, 'task_form.html', {'form': form})
+
+@require_POST
+@login_required
+def task_status_update(request, task_id):
+    task = get_object_or_404(Task, id= task_id, user=request.user)
+    task.completed = not task.completed
+    task.save()
+    return JsonResponse({'completed': task.completed})
