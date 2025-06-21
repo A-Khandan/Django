@@ -4,7 +4,7 @@
 <h1 class = "text-bold text-xl text-white mb-6">Your Tasks</h1>
 
 <div class="mb-4">
-    <a href="{% url 'task_create' %}" class="bg-purple-500 border-purple-600 border hover:bg-transparent border-purple text-white px-4 py-2 rounded">
+    <a href="{% url 'task_create' %}" class="bg-purple-500 border-purple-800 border hover:bg-transparent border-purple text-white px-4 py-2 ">
         ➕ New Task
     </a>
 </div>
@@ -12,12 +12,12 @@
 <div class="overflow-x-auto">
     <table class="table-auto w-full text-white border border-gray-700">
         <thead>
-            <tr class="bg-blue-500 text-left">
-                <th class="p-2">Task Name</th>
-                <th class="p-2">Description</th>
-                <th class="p-2">Due Date</th>
-                <th class="p-2">Priority</th>
-                <th class="p-2">Status</th>
+            <tr class="bg-b-transparent text-left border-b-1 border-l border-r border-t">
+                <th class="p-2 border">Task Name</th>
+                <th class="p-2 border">Description</th>
+                <th class="p-2 border">Due Date</th>
+                <th class="p-2 border">Priority</th>
+                <th class="p-2 border">Status</th>
             </tr>
         </thead>
         <tbody>

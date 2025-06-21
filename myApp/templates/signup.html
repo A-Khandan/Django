@@ -1,10 +1,29 @@
 {% extends "base.html" %}
-{% block title%}Sign up{% endblock %}
-{% block content%}
-<h2 class="text-white text-xl mb-4">Create an Account</h2>
-<form method="post" class="space-y-4">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Sign Up</button>
-</form>
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto backdrop-blur-sm bg-white/5 p-8 rounded-xl border border-gray-700 shadow-lg">
+    <h2 class="text-white text-2xl font-semibold mb-6 text-center">Create an Account</h2>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-1" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200">
+            Sign Up
+        </button>
+    </form>
+</div>
 {% endblock %}
