@@ -102,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = '/login/'
 
-LOGIN_REDIRECT_URL = '/tasks/'  # After successful login
+LOGIN_REDIRECT_URL = '/tasks/'  
 
 
 # Internationalization

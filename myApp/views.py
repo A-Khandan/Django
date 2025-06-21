@@ -11,10 +11,23 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Task
 from .forms import TaskForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login 
 
 class homeView(View):
     def get(self, request): # 'request' is an instance of HttpRequest class, it represents everything the brower sent to the server
         return render(request, 'home.html')
+    
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('task_list')
+    else:
+        form = UserCreationForm()
+    return render(request, 'signup.html', {'form': form})
     
 @login_required
 def task_list(request):
